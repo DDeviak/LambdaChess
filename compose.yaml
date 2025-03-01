@@ -1,0 +1,6 @@
+﻿services:
+  lambdachess.webapi:
+    image: lambdachess.webapi
+    build:
+      context: .
+      dockerfile: LambdaChess.WebAPI/Dockerfile

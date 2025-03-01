@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.WebAPI", "LambdaChess.WebAPI\LambdaChess.WebAPI.csproj", "{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E669807-6FF3-4C7C-B27C-BDF016751695}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
