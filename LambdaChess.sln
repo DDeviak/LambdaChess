@@ -1,11 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.WebAPI", "LambdaChess.WebAPI\LambdaChess.WebAPI.csproj", "{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E669807-6FF3-4C7C-B27C-BDF016751695}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.DAL.Models", "LambdaChess.DAL.Models\LambdaChess.DAL.Models.csproj", "{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.DAL.Repositories.Abstractions", "LambdaChess.DAL.Repositories.Abstractions\LambdaChess.DAL.Repositories.Abstractions.csproj", "{7DD29A20-2602-420B-B208-EAADC32E9EF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.DAL.Repositories.Implementations", "LambdaChess.DAL.Repositories.Implementations\LambdaChess.DAL.Repositories.Implementations.csproj", "{32472A81-A7E8-4B60-AA30-77F0B98B9DD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LambdaChess.DAL", "LambdaChess.DAL", "{04DCEFC7-A4B1-4897-AB93-EDDFC3E12599}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LambdaChess.DAL.Repositories", "LambdaChess.DAL.Repositories", "{B2781A8A-9101-4D13-8788-4627B16B0CA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LambdaChess.BLL", "LambdaChess.BLL", "{1A1F35CF-DE30-474C-89EF-07E83FD686DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.BLL.Services", "LambdaChess.BLL.Services\LambdaChess.BLL.Services.csproj", "{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LambdaChess.Web", "LambdaChess.Web", "{DB5DB563-60DF-4625-BB66-2EFED16F1224}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.Web.Controllers", "LambdaChess.Web.Controllers\LambdaChess.Web.Controllers.csproj", "{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaChess.Web.UI", "LambdaChess.Web.UI\LambdaChess.Web.UI.csproj", "{D6AD45CD-8F32-4EFC-9871-37EAB3685287}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +31,38 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95FF4FD1-5925-4A18-8C9A-FE1B030B815D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DD29A20-2602-420B-B208-EAADC32E9EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DD29A20-2602-420B-B208-EAADC32E9EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DD29A20-2602-420B-B208-EAADC32E9EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DD29A20-2602-420B-B208-EAADC32E9EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32472A81-A7E8-4B60-AA30-77F0B98B9DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32472A81-A7E8-4B60-AA30-77F0B98B9DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32472A81-A7E8-4B60-AA30-77F0B98B9DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32472A81-A7E8-4B60-AA30-77F0B98B9DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6AD45CD-8F32-4EFC-9871-37EAB3685287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6AD45CD-8F32-4EFC-9871-37EAB3685287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6AD45CD-8F32-4EFC-9871-37EAB3685287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6AD45CD-8F32-4EFC-9871-37EAB3685287}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CDA22F81-8B9F-4CA4-88AB-06162EA8E3EE} = {04DCEFC7-A4B1-4897-AB93-EDDFC3E12599}
+		{B2781A8A-9101-4D13-8788-4627B16B0CA0} = {04DCEFC7-A4B1-4897-AB93-EDDFC3E12599}
+		{7DD29A20-2602-420B-B208-EAADC32E9EF0} = {B2781A8A-9101-4D13-8788-4627B16B0CA0}
+		{32472A81-A7E8-4B60-AA30-77F0B98B9DD4} = {B2781A8A-9101-4D13-8788-4627B16B0CA0}
+		{A5875FFB-3A01-4AD4-878F-4C2FCA496E6E} = {1A1F35CF-DE30-474C-89EF-07E83FD686DE}
+		{5F0642C0-1CA3-48FD-B6F1-377BFE448D2C} = {DB5DB563-60DF-4625-BB66-2EFED16F1224}
+		{D6AD45CD-8F32-4EFC-9871-37EAB3685287} = {DB5DB563-60DF-4625-BB66-2EFED16F1224}
 	EndGlobalSection
 EndGlobal

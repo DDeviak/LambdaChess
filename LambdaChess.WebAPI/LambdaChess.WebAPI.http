@@ -1,6 +1,0 @@
-@LambdaChess.WebAPI_HostAddress = http://localhost:5013
-
-GET {{LambdaChess.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

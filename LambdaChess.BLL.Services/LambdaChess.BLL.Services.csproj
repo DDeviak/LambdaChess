@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentResults" Version="3.16.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LambdaChess.DAL.Models\LambdaChess.DAL.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstractions\" />
+      <Folder Include="Implementations\" />
+    </ItemGroup>
+
+</Project>

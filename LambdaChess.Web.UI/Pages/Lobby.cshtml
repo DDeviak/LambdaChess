@@ -1,0 +1,17 @@
+@page
+@model LobbyModel
+
+<div class="container">
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="gamesList">
+                @foreach (var t in Model.GameSessions)
+                {
+                    <li>
+                        @t.WhitePlayer?.UserName ?? @t.BlackPlayer?.UserName
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
