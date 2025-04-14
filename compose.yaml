@@ -16,3 +16,9 @@
     build:
       context: .
       dockerfile: LambdaChess.Web.UI/Dockerfile
+
+  lambdachess.web.ui-1:
+    image: lambdachess.web.ui-1
+    build:
+      context: .
+      dockerfile: LambdaChess.Web.UI/Dockerfile

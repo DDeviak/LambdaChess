@@ -1,14 +1,13 @@
-@page
-@model LobbyModel
+@model IEnumerable<LambdaChess.DAL.Models.GameSession>
 
 <div class="container">
     <div class="row p-1">
         <div class="col-6">
             <ul id="gamesList">
-                @foreach (var t in Model.GameSessions)
+                @foreach (var t in Model)
                 {
                     <li>
-                        @t.WhitePlayer?.UserName ?? @t.BlackPlayer?.UserName
+                        @(t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName)
                     </li>
                 }
             </ul>

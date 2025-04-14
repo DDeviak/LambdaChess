@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>aspnet-LambdaChess.Web.UI-dab927e1-1adf-4db5-bc20-9b98a513805c</UserSecretsId>
+        <UserSecretsId>aspnet-LambdaChess.Web.UI-935f54ee-d2cc-4a6d-aae2-0a57b85504cd</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
@@ -13,11 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.14"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.14"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14"/>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.15"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.15"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -29,30 +29,6 @@
     <ItemGroup>
       <ProjectReference Include="..\LambdaChess.BLL.Services\LambdaChess.BLL.Services.csproj" />
       <ProjectReference Include="..\LambdaChess.DAL.Repositories.Implementations\LambdaChess.DAL.Repositories.Implementations.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Index.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Privacy.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Shared\_Layout.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Shared\_LoginPartial.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Shared\_ValidationScriptsPartial.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\_ViewStart.cshtml" />
-      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <AdditionalFiles Include="Areas\Identity\Pages\_ViewStart.cshtml" />
-      <AdditionalFiles Include="Pages\Error.cshtml" />
-      <AdditionalFiles Include="Pages\Index.cshtml" />
-      <AdditionalFiles Include="Pages\Privacy.cshtml" />
-      <AdditionalFiles Include="Pages\Shared\_Layout.cshtml" />
-      <AdditionalFiles Include="Pages\Shared\_LoginPartial.cshtml" />
-      <AdditionalFiles Include="Pages\Shared\_ValidationScriptsPartial.cshtml" />
-      <AdditionalFiles Include="Pages\_ViewImports.cshtml" />
-      <AdditionalFiles Include="Pages\_ViewStart.cshtml" />
     </ItemGroup>
 
 </Project>

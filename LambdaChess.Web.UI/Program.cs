@@ -27,7 +27,6 @@ public class Program
 		builder.RegisterServices();
 		
 		builder.Services.AddControllersWithViews();
-		builder.Services.AddRazorPages();
 		builder.Services.AddSignalR();
 
 		var app = builder.Build();
@@ -39,7 +38,7 @@ public class Program
 		}
 		else
 		{
-			app.UseExceptionHandler("/Error");
+			app.UseExceptionHandler("/Home/Error");
 			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 			app.UseHsts();
 		}
@@ -53,7 +52,11 @@ public class Program
 		
 		app.UseAuthorization();
 
-		app.MapRazorPages();
+		app.MapControllerRoute(
+			name: "default",
+			pattern: "{controller=Home}/{action=Index}/{id?}");
+		app.MapControllers();
+		//app.MapRazorPages();
 
 		app.Run();
 	}
