@@ -7,6 +7,8 @@ namespace LambdaChess.DAL.Repositories.Implementations.Persistance;
 
 public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
+	public DbSet<GameSession> GameSessions { get; set; } = null!;
+	
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 		: base(options)
 	{

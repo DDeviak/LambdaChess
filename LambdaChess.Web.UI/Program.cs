@@ -2,7 +2,6 @@ using LambdaChess.BLL.Services.Hosting;
 using LambdaChess.DAL.Models;
 using LambdaChess.DAL.Repositories.Implementations.Hosting;
 using LambdaChess.DAL.Repositories.Implementations.Persistance;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace LambdaChess.Web.UI;
@@ -25,7 +24,7 @@ public class Program
 
 		builder.RegisterRepositories();
 		builder.RegisterServices();
-		
+
 		builder.Services.AddControllersWithViews();
 		builder.Services.AddSignalR();
 
@@ -47,16 +46,16 @@ public class Program
 		app.UseStaticFiles();
 
 		app.UseRouting();
-		
+
 		app.MapHub<Hubs.GameHub>("/gamehub");
-		
+
 		app.UseAuthorization();
 
 		app.MapControllerRoute(
 			name: "default",
 			pattern: "{controller=Home}/{action=Index}/{id?}");
 		app.MapControllers();
-		//app.MapRazorPages();
+		app.MapRazorPages();
 
 		app.Run();
 	}

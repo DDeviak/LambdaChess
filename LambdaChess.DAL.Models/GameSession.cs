@@ -6,9 +6,10 @@ namespace LambdaChess.DAL.Models;
 public class GameSession : IModel<Guid>
 {
 	public Guid Id { get; set; }
-	public User WhitePlayer { get; set; } = null!;
-	public User BlackPlayer { get; set; } = null!;
+	public User? WhitePlayer { get; set; } = null!;
+	public User? BlackPlayer { get; set; } = null!;
 	public DateTime CreatedAt { get; set; }
 	public DateTime? FinishedAt { get; set; }
+	public string? PGN { get; set; }
 	public Winner Winner { get; set; }
 }

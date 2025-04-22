@@ -1,13 +1,32 @@
 @model IEnumerable<LambdaChess.DAL.Models.GameSession>
 
 <div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Lobby</h1>
+        </div>
+    </div>
+    <script>
+        const createGame = () => {
+          $.post("/Game/Create", function(data, status){
+              if (status === "success") {
+                  // Redirect to the game page
+                  window.location.href = "/Game?gameId=" + data.gameId;
+              } else {
+                  // Handle error
+                  alert("Error creating game: " + status);
+              }
+          });
+        }
+    </script>
+    <button onclick="createGame()">Create Game</button>
     <div class="row p-1">
         <div class="col-6">
             <ul id="gamesList">
                 @foreach (var t in Model)
                 {
                     <li>
-                        @(t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName)
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index" asp-route-gameId="@(t.Id)">@(t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName)</a>
                     </li>
                 }
             </ul>

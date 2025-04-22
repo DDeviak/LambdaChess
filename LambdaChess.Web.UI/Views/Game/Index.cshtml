@@ -1,28 +1,7 @@
-﻿<div class="container">
-    <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput"/></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput"/></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message"/>
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr/>
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-</div>
+﻿@using System.Security.Claims
+@model LambdaChess.DAL.Models.GameSession
+
+<div id = "test"></div>
 
 <div id="myBoard" style="width: 50%"></div>
 <label>Status:</label>
@@ -34,8 +13,17 @@
 
 <link rel="stylesheet"
       href="lib/chessboardjs/dist/chessboard-1.0.0.css"/>
+
+<script>
+    var context = {
+        gameId: '@Model?.Id',
+        side: '@(Model?.WhitePlayer.Id == Guid.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value) ? "white" : "black")',
+	    pgn: '@Model?.PGN',
+    };
+</script>
+
 <script src="lib/jquery/dist/jquery.js"></script>
 <script src="lib/chessboardjs/dist/chessboard-1.0.0.js"></script>
 <script src="lib/chess.js/chess.js"></script>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/game.js"></script>

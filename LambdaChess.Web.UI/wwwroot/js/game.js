@@ -2,14 +2,20 @@
 
 var board = null
 var game = new Chess()
+const connection = new signalR.HubConnectionBuilder().withUrl("/gamehub").build();
 var $status = $('#status')
 var $fen = $('#fen')
 var $pgn = $('#pgn')
 
-function onDragStart (source, piece, position, orientation) {
+var side = context.side;
+var gameId = context.gameId;
+
+$("#test").html("GameId: " + gameId + " Side: " + side);
+
+function onDragStart(source, piece, position, orientation) {
     // do not pick up pieces if the game is over
     if (game.game_over()) return false
-
+    if (game.turn() !== side[0]) return false
     // only pick up pieces for the side to move
     if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
         (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
@@ -17,7 +23,7 @@ function onDragStart (source, piece, position, orientation) {
     }
 }
 
-function onDrop (source, target) {
+function onDrop(source, target) {
     // see if the move is legal
     var move = game.move({
         from: source,
@@ -28,16 +34,18 @@ function onDrop (source, target) {
     // illegal move
     if (move === null) return 'snapback'
 
+    connection.invoke("SendPGNGameState", gameId, game.pgn()).catch(e => console.error(e));
+
     updateStatus()
 }
 
 // update the board position after the piece snap
 // for castling, en passant, pawn promotion
-function onSnapEnd () {
+function onSnapEnd() {
     board.position(game.fen())
 }
 
-function updateStatus () {
+function updateStatus() {
     var status = ''
 
     var moveColor = 'White'
@@ -73,39 +81,35 @@ function updateStatus () {
 var config = {
     draggable: true,
     position: 'start',
+    orientation: side,
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd
 }
 board = Chessboard('myBoard', config)
 
+if (context.pgn) loadPGN(context.pgn);
+
 updateStatus()
 
-const connection = new signalR.HubConnectionBuilder().withUrl("/gamehub").build();
+const loadPGN = (pgn) => {
+    game.load_pgn(pgn);
+    board.position(game.fen());
+    console.log(pgn, game.pgn());
 
-//Disable the send button until connection is established.
-document.getElementById("sendButton").disabled = true;
+    updateStatus();
+}
 
-connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
+connection.on("ReceivePGNGameState", loadPGN);
+
+connection.on("Error", function (message) {
+    console.error(message);
 });
 
 connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
-});
-
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
+    connection.invoke("JoinGame", gameId).catch(function (err) {
         return console.error(err.toString());
     });
-    event.preventDefault();
+}).catch(function (err) {
+    return console.error(err.toString());
 });
