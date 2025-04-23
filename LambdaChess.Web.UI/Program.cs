@@ -1,6 +1,7 @@
 using LambdaChess.BLL.Services.Hosting;
 using LambdaChess.DAL.Models;
-using LambdaChess.DAL.Repositories.Implementations.Hosting;
+using LambdaChess.DAL.Repositories.Abstractions;
+using LambdaChess.DAL.Repositories.Implementations;
 using LambdaChess.DAL.Repositories.Implementations.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,8 @@ public class Program
 		builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
 			.AddEntityFrameworkStores<ApplicationDbContext>();
 
-		builder.RegisterRepositories();
+		builder.Services.AddScoped<IUserRepository, UserRepository>();
+		builder.Services.AddScoped<IGameSessionRepository, GameSessionRepository>();
 		builder.RegisterServices();
 
 		builder.Services.AddControllersWithViews();
