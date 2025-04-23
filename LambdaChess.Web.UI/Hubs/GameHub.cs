@@ -1,6 +1,5 @@
-using LambdaChess.DAL.Models;
 using LambdaChess.DAL.Repositories.Abstractions;
-using Microsoft.AspNetCore.Identity;
+using LambdaChess.Web.UI.Extensions;
 using Microsoft.AspNetCore.SignalR;
 
 namespace LambdaChess.Web.UI.Hubs;
@@ -8,18 +7,15 @@ namespace LambdaChess.Web.UI.Hubs;
 public class GameHub : Hub
 {
 	private readonly IGameSessionRepository _gameSessionRepository;
-	private readonly UserManager<User> _userManager;
 
-	public GameHub(IGameSessionRepository gameSessionRepository, UserManager<User> userManager)
+	public GameHub(IGameSessionRepository gameSessionRepository)
 	{
 		_gameSessionRepository = gameSessionRepository;
-		_userManager = userManager;
 	}
 	
 	public async Task JoinGame(string gameId)
 	{
 		var gameSession = await _gameSessionRepository.GetByIdAsync(Guid.Parse(gameId));
-		var currentUser = await _userManager.GetUserAsync(Context.User);
 		if (gameSession == null)
 		{
 			await Clients.Caller.SendAsync("Error", "Game session not found.");
@@ -30,18 +26,18 @@ public class GameHub : Hub
 		
 		await Clients.Group(gameId).SendAsync("UserJoined", Context.User.Identity.Name);
 		
-		if (gameSession.WhitePlayer?.Id == currentUser.Id || gameSession.BlackPlayer?.Id == currentUser.Id)
+		if (gameSession.WhitePlayerId == Context.User.GetUserId() || gameSession.BlackPlayer?.Id == Context.User.GetUserId())
 		{
 			return;
 		}
 		
 		if (gameSession.WhitePlayer is null)
 		{
-			gameSession.WhitePlayer = currentUser;
+			gameSession.WhitePlayerId = Context.User.GetUserId();
 		}
 		else if (gameSession.BlackPlayer is null)
 		{
-			gameSession.BlackPlayer = currentUser;
+			gameSession.BlackPlayerId = Context.User.GetUserId();
 		}
 		else
 		{

@@ -13,4 +13,31 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 		: base(options)
 	{
 	}
+	
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+		base.OnModelCreating(builder);
+
+		builder.Entity<GameSession>()
+			.HasOne(x => x.WhitePlayer)
+			.WithMany()
+			.HasForeignKey(x => x.WhitePlayerId)
+			.OnDelete(DeleteBehavior.NoAction)
+			.IsRequired(false);
+		
+		builder.Entity<GameSession>()
+			.HasOne(x => x.BlackPlayer)
+			.WithMany()
+			.HasForeignKey(x => x.BlackPlayerId)
+			.OnDelete(DeleteBehavior.NoAction)
+			.IsRequired(false);
+		
+		builder.Entity<GameSession>()
+			.Property(x => x.PGN)
+			.HasColumnType("text");
+		
+		builder.Entity<GameSession>()
+			.Property(x => x.Winner)
+			.HasConversion<string>();
+	}
 }

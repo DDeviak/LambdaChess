@@ -26,7 +26,7 @@
                 @foreach (var t in Model)
                 {
                     <li>
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index" asp-route-gameId="@(t.Id)">@(t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName)</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index" asp-route-gameId="@(t.Id)">@((t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName) + (t.BlackPlayerId ?? t.BlackPlayerId))</a>
                     </li>
                 }
             </ul>

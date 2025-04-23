@@ -1,7 +1,7 @@
 using LambdaChess.DAL.Models;
 using LambdaChess.DAL.Repositories.Abstractions;
+using LambdaChess.Web.UI.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LambdaChess.Web.UI.Controllers;
@@ -10,12 +10,10 @@ namespace LambdaChess.Web.UI.Controllers;
 public class GameController : BaseController
 {
 	private readonly IGameSessionRepository _gameSessionRepository;
-	private readonly UserManager<User> _userManager;
 
-	public GameController(IGameSessionRepository gameSessionRepository, UserManager<User> userManager)
+	public GameController(IGameSessionRepository gameSessionRepository)
 	{
 		_gameSessionRepository = gameSessionRepository;
-		_userManager = userManager;
 	}
 	
 	[HttpGet]
@@ -38,7 +36,7 @@ public class GameController : BaseController
 		var gameSession = new GameSession
 		{
 			CreatedAt = DateTime.Now,
-			WhitePlayer = await _userManager.GetUserAsync(User),
+			WhitePlayerId = User.GetUserId(),
 			PGN = string.Empty
 		};
 		await _gameSessionRepository.CreateAsync(gameSession);

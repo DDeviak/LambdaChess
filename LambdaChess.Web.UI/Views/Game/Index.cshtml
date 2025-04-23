@@ -17,7 +17,7 @@
 <script>
     var context = {
         gameId: '@Model?.Id',
-        side: '@(Model?.WhitePlayer.Id == Guid.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value) ? "white" : "black")',
+        side: '@(Model?.WhitePlayerId == Guid.Parse(User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value) ? "white" : "black")',
 	    pgn: '@Model?.PGN',
     };
 </script>
