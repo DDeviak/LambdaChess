@@ -56,11 +56,13 @@ function updateStatus() {
     // checkmate?
     if (game.in_checkmate()) {
         status = 'Game over, ' + moveColor + ' is in checkmate.'
+        connection.invoke("RegisterGameEnd", gameId, status).catch(e => console.error(e));
     }
 
     // draw?
     else if (game.in_draw()) {
         status = 'Game over, drawn position'
+        connection.invoke("RegisterGameEnd", gameId, status).catch(e => console.error(e));
     }
 
     // game still on

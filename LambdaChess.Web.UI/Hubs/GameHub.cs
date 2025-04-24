@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LambdaChess.Web.UI.Hubs;
 
+using System.Diagnostics;
+using DAL.Models.Enums;
+
 public class GameHub : Hub
 {
 	private readonly IGameSessionRepository _gameSessionRepository;
@@ -63,5 +66,30 @@ public class GameHub : Hub
 		session.PGN = gameState;
 		await _gameSessionRepository.UpdateAsync(session);
 		await Clients.Group(gameId).SendAsync("ReceivePGNGameState", gameState);
+	}
+
+	public async Task RegisterGameEnd(string gameId, string gameResult) {
+		var session = await _gameSessionRepository.GetByIdAsync(Guid.Parse(gameId));
+		if (session == null) {
+			await Clients.Caller.SendAsync("Error", "Game session not found.");
+			return;
+		}
+		session.FinishedAt = DateTime.Now;
+		switch (gameResult) {
+			case "Game over, drawn position":
+				session.Winner = Winner.None;
+				break;
+			case "Game over, Black is in checkmate.":
+				session.Winner = Winner.White;
+				break;
+			case "Game over, White is in checkmate.":
+				session.Winner = Winner.Black;
+				break;
+			default:
+				await Clients.Caller.SendAsync("Error", "Given incomprehensible game result");
+				return;
+		}
+		await _gameSessionRepository.UpdateAsync(session);
+		Debug.Print("Game session has ended!");
 	}
 }
