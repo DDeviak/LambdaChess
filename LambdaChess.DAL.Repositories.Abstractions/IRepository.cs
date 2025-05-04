@@ -11,4 +11,5 @@ public interface IRepository<TModel, TKey>
 	public Task<TModel> CreateAsync(TModel model, CancellationToken cancellationToken = default);
 	public Task<TModel> UpdateAsync(TModel model, CancellationToken cancellationToken = default);
 	public Task DeleteAsync(TKey id, CancellationToken cancellationToken = default);
+	IQueryable<TModel> GetQueryable(Func<IQueryable<TModel>,IQueryable<TModel>> query);
 }

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using LambdaChess.DAL.Models.Abstractions;
 using LambdaChess.DAL.Repositories.Abstractions;
 using LambdaChess.DAL.Repositories.Implementations.Persistance;
@@ -56,6 +57,11 @@ where TModel : class, IModel<TKey>
 			return _dbContext.SaveChangesAsync(cancellationToken);
 		}
 		return Task.CompletedTask;
+	}
+	
+	public IQueryable<TModel> GetQueryable(Func<IQueryable<TModel>,IQueryable<TModel>> query)
+	{
+		return query(DbSet).AsNoTracking();
 	}
 	
 	protected virtual void Dispose(bool disposing)
