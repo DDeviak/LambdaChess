@@ -56,11 +56,13 @@ function updateStatus() {
     // checkmate?
     if (game.in_checkmate()) {
         status = 'Game over, ' + moveColor + ' is in checkmate.'
+        connection.invoke("RegisterGameEnd", gameId, status).catch(e => console.error(e));
     }
 
     // draw?
     else if (game.in_draw()) {
         status = 'Game over, drawn position'
+        connection.invoke("RegisterGameEnd", gameId, status).catch(e => console.error(e));
     }
 
     // game still on
@@ -107,9 +109,20 @@ connection.on("Error", function (message) {
 });
 
 connection.start().then(function () {
-    connection.invoke("JoinGame", gameId).catch(function (err) {
-        return console.error(err.toString());
+    connection.invoke("JoinGame", gameId).then(function() {
+        console.log("Successfully joined game:", gameId);
+    }).catch(function (err) {
+        console.error("Error while invoking JoinGame:", err.toString());
     });
-}).catch(function (err) {
-    return console.error(err.toString());
+
+    // Listen for the PlayerRoleAssigned event to receive the player's role
+    connection.on("PlayerRoleAssigned", function(role) {
+        console.log("Player role assigned:", role);
+        context.side = role;
+        config.orientation = role;
+        side = role;
+        board = Chessboard('myBoard', config)
+    });
+}).catch(function(err) {
+    console.error("Error starting connection:", err.toString());
 });

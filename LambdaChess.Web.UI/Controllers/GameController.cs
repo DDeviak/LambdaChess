@@ -39,7 +39,7 @@ public class GameController : BaseController
 		var gameSession = new GameSession
 		{
 			CreatedAt = DateTime.Now,
-			WhitePlayerId = User.GetUserId(),
+			WhitePlayerId = null, // not defined yet
 			PGN = string.Empty
 		};
 		await _gameSessionRepository.CreateAsync(gameSession);
