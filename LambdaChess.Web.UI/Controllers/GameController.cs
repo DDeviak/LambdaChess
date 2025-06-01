@@ -27,9 +27,9 @@ public class GameController : BaseController
 	[HttpGet]
 	public async Task<IActionResult> Lobby()
 	{
-		var model = (await _gameSessionRepository
-				.GetQueryable(q => q.Include(t => t.WhitePlayer).Include(t => t.BlackPlayer)).ToListAsync())
-			.Where(x => x.WhitePlayer is null || x.BlackPlayer is null).ToList();
+		var model = await Task.Run(() => (_gameSessionRepository
+				.GetQueryable(q => q.Include(t => t.WhitePlayer).Include(t => t.BlackPlayer)).ToList())
+			.Where(x => x.WhitePlayer is null || x.BlackPlayer is null).ToList());
 		return View(model);
 	}
 
@@ -42,7 +42,7 @@ public class GameController : BaseController
 			WhitePlayerId = null, // not defined yet
 			PGN = string.Empty
 		};
-		await _gameSessionRepository.CreateAsync(gameSession);
+		gameSession = await _gameSessionRepository.CreateAsync(gameSession);
 		return Ok(new { gameId = gameSession.Id });
 	}
 }
