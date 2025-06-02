@@ -8,14 +8,6 @@
       "files": [
         "dist/browser/signalr.js"
       ]
-    },
-    {
-      "library": "@chrisoakman/chessboardjs@latest",
-      "destination": "wwwroot/lib/chessboardjs"
-    },
-    {
-      "library": "chess.js@0.10.2",
-      "destination": "wwwroot/lib/chess.js"
     }
   ]
 }

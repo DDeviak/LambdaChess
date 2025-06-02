@@ -2,7 +2,184 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="home-container">
+    <section class="hero-section text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-lg bg-gradient">
+                        <div class="card-body p-5">
+                            <h1 class="display-4 fw-bold mt-2 mb-4">
+                                <i class="fas fa-chess"></i> LambdaChess
+                            </h1>
+                            <p class="lead mb-4">
+                                Welcome to LambdaChess - a modern chess platform where you can play, analyze, and improve your chess skills.
+                            </p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                                <a asp-area="" asp-controller="Game" asp-action="Lobby" class="btn btn-primary btn-lg px-4 me-md-2">
+                                    <i class="fas fa-chess-board"></i> Play Now
+                                </a>
+                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-light btn-lg px-4">
+                                        <i class="fas fa-user-plus"></i> Create Account
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Features</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h5 class="card-title mt-3">Play with Others</h5>
+                            <p class="card-text">
+                                Join a game with another player or create your own game and invite friends.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h5 class="card-title mt-3">Track Your Progress</h5>
+                            <p class="card-text">
+                                Keep track of your games, analyze your moves, and see your improvement over time.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h5 class="card-title mt-3">Play Anywhere</h5>
+                            <p class="card-text">
+                                Our responsive design works on desktop, tablet, and mobile devices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Stats</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card text-center py-4">
+                        <div class="stat-value">
+                            <span class="counter" data-count="50">0</span><span>+</span>
+                        </div>
+                        <div class="stat-label">
+                            Active Players
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center py-4">
+                        <div class="stat-value">
+                            <span class="counter" data-count="120">0</span><span>+</span>
+                        </div>
+                        <div class="stat-label">
+                            Games Played
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card text-center py-4">
+                        <div class="stat-value">
+                            <span class="counter" data-count="10">0</span><span>+</span>
+                        </div>
+                        <div class="stat-label">
+                            Active Games
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-to-play-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">How to Play</h2>
+                    <ol class="steps-list">
+                        <li class="mb-3">
+                            <h5>Create an Account</h5>
+                            <p>Sign up to track your games and progress.</p>
+                        </li>
+                        <li class="mb-3">
+                            <h5>Enter the Lobby</h5>
+                            <p>Browse active games or create your own.</p>
+                        </li>
+                        <li class="mb-3">
+                            <h5>Join or Create a Game</h5>
+                            <p>Join an existing game or start a new one.</p>
+                        </li>
+                        <li>
+                            <h5>Play Chess!</h5>
+                            <p>Make your moves and enjoy the game.</p>
+                        </li>
+                    </ol>
+                    <div class="mt-4">
+                        <a asp-area="" asp-controller="Game" asp-action="Lobby" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Start Playing
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mt-4 mt-lg-0">
+                        <div class="chess-preview">
+                            <img src="~/img/chess-preview.jpg" alt="Chess Preview" class="img-fluid rounded shadow-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Animate counters
+            $('.counter').each(function() {
+                var $this = $(this);
+                var countTo = $this.attr('data-count');
+                
+                $({ countNum: 0 }).animate({
+                    countNum: countTo
+                }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum);
+                    }
+                });
+            });
+        });
+    </script>
+}

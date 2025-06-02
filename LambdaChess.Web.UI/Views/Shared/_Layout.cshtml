@@ -3,52 +3,137 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - LambdaChess.Web.UI</title>
+    <title>@ViewData["Title"] - LambdaChess</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style"/>
+    <link rel="preload" href="~/css/site.css" as="style"/>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" as="style"/>
+    
+    <!-- Primary CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/LambdaChess.Web.UI.styles.css" asp-append-version="true"/>
+    
+    <!-- Fonts and Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="~/img/favicon.png"/>
+    
+    <!-- Page-specific styles -->
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LambdaChess.Web.UI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Lobby">Game</a>
-                    </li>
-                </ul>
-                <partial name="_LoginPartial"/>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+    
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-chess"></i> LambdaChess
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Game" asp-action="Lobby">
+                                <i class="fas fa-chess-board"></i> Game Lobby
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt"></i> Privacy
+                            </a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <div class="form-check form-switch ms-3 d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                        <label class="form-check-label ms-2 text-light" for="darkModeToggle">
+                            <i class="fas fa-moon"></i>
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
+        </nav>
+    </header>
+    
+    <!-- Flash Messages Container -->
+    <div id="flash-messages-container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="flash-message" data-type="success">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="flash-message" data-type="danger">@TempData["ErrorMessage"]</div>
+        }
+        @if (TempData["InfoMessage"] != null)
+        {
+            <div class="flash-message" data-type="info">@TempData["InfoMessage"]</div>
+        }
+        @if (TempData["WarningMessage"] != null)
+        {
+            <div class="flash-message" data-type="warning">@TempData["WarningMessage"]</div>
+        }
+    </div>
+    
+    <main id="main" role="main" class="pb-3">
+        <!-- Page Title -->
+        @if (!string.IsNullOrEmpty(ViewData["Title"]?.ToString()) && !ViewData.ContainsKey("HideTitle"))
+        {
+            <div class="container mt-4 mb-4">
+                <h1 class="page-title">@ViewData["Title"]</h1>
+            </div>
+        }
+        
+        <!-- Main Content -->
         @RenderBody()
     </main>
-</div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - LambdaChess.Web.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <div class="row py-3">
+                <div class="col-md-6">
+                    &copy; @DateTime.Now.Year - LambdaChess - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Toast Notifications Container -->
+    <div class="toast-container"></div>
+    
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn btn-primary btn-sm rounded-circle position-fixed" style="bottom: 20px; right: 20px; display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Core Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- Page-specific scripts -->
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

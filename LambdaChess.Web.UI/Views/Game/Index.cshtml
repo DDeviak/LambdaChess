@@ -1,18 +1,98 @@
-﻿@using System.Security.Claims
-@model LambdaChess.DAL.Models.GameSession
+﻿@model LambdaChess.DAL.Models.GameSession
+@using System.Security.Claims
 
-<div id = "test"></div>
+@{
+    ViewData["Title"] = "Chess Game";
+}
 
-<div id="myBoard" style="width: 50%"></div>
-<label>Status:</label>
-<div id="status"></div>
-<label>FEN:</label>
-<div id="fen"></div>
-<label>PGN:</label>
-<div id="pgn"></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="~/css/chess.css" asp-append-version="true">
+<link rel="stylesheet" href="https://unpkg.com/@@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
 
-<link rel="stylesheet"
-      href="lib/chessboardjs/dist/chessboard-1.0.0.css"/>
+<div class="game-container">
+    <div class="board-container">
+        <div id="myBoard"></div>
+        <div class="turn-indicator mt-2 mb-2 p-2 border text-center" id="turnIndicator">
+            Waiting...
+        </div>
+    </div>
+    
+    <div class="game-info">
+        <div class="player-info" id="playerInfo">
+            <div class="player white-player">
+                <i class="fas fa-chess-king white-piece"></i>
+                <span>@(Model?.WhitePlayer?.UserName ?? "Waiting for player...")</span>
+                @if (Model?.WhitePlayerId == Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                {
+                    <span class="badge bg-primary ms-2">You</span>
+                }
+            </div>
+            <div class="player black-player">
+                <i class="fas fa-chess-king black-piece"></i>
+                <span>@(Model?.BlackPlayer?.UserName ?? "Waiting for player...")</span>
+                @if (Model?.BlackPlayerId == Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                {
+                    <span class="badge bg-primary ms-2">You</span>
+                }
+            </div>
+        </div>
+        
+        <div class="game-controls mb-3">
+            <button id="offerDrawBtn" class="btn btn-secondary">
+                <i class="fas fa-handshake"></i> Offer Draw
+            </button>
+            <button id="resignBtn" class="btn btn-danger">
+                <i class="fas fa-flag"></i> Resign
+            </button>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-title">Move History</div>
+            <div class="move-history" id="moveHistory">
+                <!-- Move history will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-title">Game Status</div>
+            <div class="game-status mb-2" id="status">
+                <!-- Status will be populated by JavaScript -->
+            </div>
+            
+            <div class="technical-info">
+                <div class="mb-1"><strong>FEN:</strong> <span id="fen"></span></div>
+                <div><strong>PGN:</strong> <span id="pgn"></span></div>
+            </div>
+        </div>
+        
+        <div class="last-move mt-3" id="lastMove">
+            <!-- Last move info will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<div id="notificationArea">
+    <!-- Notifications will be populated by JavaScript -->
+</div>
+
+<!-- Game Over Modal -->
+<div class="modal fade" id="gameOverModal" tabindex="-1" aria-labelledby="gameOverModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="gameOverModalLabel">Game Over</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="gameOverMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("Lobby", "Game")" class="btn btn-primary">Return to Lobby</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     var context = {
@@ -23,7 +103,7 @@
 </script>
 
 <script src="lib/jquery/dist/jquery.js"></script>
-<script src="lib/chessboardjs/dist/chessboard-1.0.0.js"></script>
-<script src="lib/chess.js/chess.js"></script>
+<script src="https://unpkg.com/@@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/game.js"></script>
