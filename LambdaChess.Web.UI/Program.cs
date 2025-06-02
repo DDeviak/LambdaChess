@@ -1,9 +1,8 @@
 using LambdaChess.BLL.Services.Hosting;
 using LambdaChess.DAL.Models;
-// using LambdaChess.DAL.Repositories.Implementations.Hosting;
-using LambdaChess.DAL.Repositories.Implementations.Persistance;
 using LambdaChess.DAL.Repositories.Abstractions;
 using LambdaChess.DAL.Repositories.Implementations;
+using LambdaChess.DAL.Repositories.Implementations.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace LambdaChess.Web.UI;
@@ -18,7 +17,7 @@ public class Program
 		var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
 		                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 		builder.Services.AddDbContext<ApplicationDbContext>(options =>
-			options.UseSqlite(connectionString));
+			options.UseSqlite(connectionString,b => b.MigrationsAssembly("LambdaChess.Web.UI")));
 		builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 		builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -32,6 +31,12 @@ public class Program
 		builder.Services.AddSignalR();
 
 		var app = builder.Build();
+
+		using (var scope = app.Services.CreateScope())
+		using (var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+		{
+			dbContext.Database.Migrate();
+		}
 
 		// Configure the HTTP request pipeline.
 		if (app.Environment.IsDevelopment())

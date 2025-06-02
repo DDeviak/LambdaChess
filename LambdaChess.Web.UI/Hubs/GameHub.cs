@@ -71,6 +71,17 @@ public class GameHub : Hub
 		await _gameSessionRepository.UpdateAsync(session);
 		await Clients.Group(gameId).SendAsync("ReceivePGNGameState", gameState);
 	}
+	
+	public async Task RequestPGNGameState(string gameId)
+	{
+		var session = await _gameSessionRepository.GetByIdAsync(Guid.Parse(gameId));
+		if (session == null)
+		{
+			await Clients.Caller.SendAsync("Error", "Game session not found.");
+			return;
+		}
+		await Clients.Caller.SendAsync("ReceivePGNGameState", session.PGN);
+	}
 
 	public async Task RegisterGameEnd(string gameId, string gameResult) {
 		var session = (await _gameSessionRepository.GetQueryable(q => q
@@ -84,17 +95,17 @@ public class GameHub : Hub
 		}
 		session.FinishedAt = DateTime.Now;
 		switch (gameResult) {
-			case "Game over, drawn position":
+			case "drawn":
 				session.Winner = Winner.None;
 				session.WhitePlayer!.Draws++;
 				session.BlackPlayer!.Draws++;
 				break;
-			case "Game over, Black is in checkmate.":
+			case "Black":
 				session.Winner = Winner.White;
 				session.BlackPlayer!.Losses++;
 				session.WhitePlayer!.Wins++;
 				break;
-			case "Game over, White is in checkmate.":
+			case "White":
 				session.Winner = Winner.Black;
 				session.BlackPlayer!.Wins++;
 				session.WhitePlayer!.Losses++;

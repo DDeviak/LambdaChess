@@ -1,35 +1,351 @@
 @model IEnumerable<LambdaChess.DAL.Models.GameSession>
 
-<div class="container">
-    <div class="row">
+@{
+    ViewData["Title"] = "Game Lobby";
+}
+
+<div class="container lobby-container">
+    <div class="row mb-4">
         <div class="col-12">
-            <h1>Lobby</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1><i class="fas fa-chess"></i> Game Lobby</h1>
+                <button id="createGameBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Game
+                </button>
+            </div>
         </div>
     </div>
-    <script>
-        const createGame = () => {
-          $.post("/Game/Create", function(data, status){
-              if (status === "success") {
-                  // Redirect to the game page
-                  window.location.href = "/Game?gameId=" + data.gameId;
-              } else {
-                  // Handle error
-                  alert("Error creating game: " + status);
-              }
-          });
-        }
-    </script>
-    <button onclick="createGame()">Create Game</button>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="gamesList">
-                @foreach (var t in Model)
-                {
-                    <li>
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index" asp-route-gameId="@(t.Id)">@((t.WhitePlayer?.UserName ?? t.BlackPlayer?.UserName) + (t.BlackPlayerId ?? t.BlackPlayerId))</a>
-                    </li>
-                }
-            </ul>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-gamepad"></i> Active Games</h5>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshGames">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                    <li><a class="dropdown-item" href="#" data-filter="all">All Games</a></li>
+                                    <li><a class="dropdown-item" href="#" data-filter="open">Open Games</a></li>
+                                    <li><a class="dropdown-item" href="#" data-filter="my">My Games</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="loadingGames" class="text-center py-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading games...</p>
+                    </div>
+                    <div id="noGames" class="text-center py-3 d-none">
+                        <i class="fas fa-chess-board fa-3x mb-3 text-muted"></i>
+                        <p>No active games found. Create a new game to get started!</p>
+                    </div>
+                    <div id="gamesList" class="d-none">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>White Player</th>
+                                        <th>Black Player</th>
+                                        <th>Created</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var game in Model)
+                                    {
+                                        <tr class="game-row @(game.WhitePlayer == null || game.BlackPlayer == null ? "table-success" : "")">
+                                            <td>
+                                                @if (game.WhitePlayer != null)
+                                                {
+                                                    <span class="player-name">@game.WhitePlayer.UserName</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Open Seat</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (game.BlackPlayer != null)
+                                                {
+                                                    <span class="player-name">@game.BlackPlayer.UserName</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Open Seat</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span title="@game.CreatedAt">@game.CreatedAt.ToShortDateString()</span>
+                                            </td>
+                                            <td>
+                                                @if (game.FinishedAt.HasValue)
+                                                {
+                                                    <span class="badge bg-secondary">Finished</span>
+                                                }
+                                                else if (game.WhitePlayer != null && game.BlackPlayer != null)
+                                                {
+                                                    <span class="badge bg-success">In Progress</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">Waiting for Player</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Index", "Game", new { gameId = game.Id })" class="btn btn-sm btn-primary">
+                                                    @if (game.WhitePlayer == null || game.BlackPlayer == null)
+                                                    {
+                                                        <i class="fas fa-sign-in-alt"></i> <span>Join</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-eye"></i> <span>Watch</span>
+                                                    }
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Game Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6><i class="fas fa-users"></i> Online Players</h6>
+                        <p id="onlinePlayersCount" class="mb-0">
+                            <span class="badge bg-success">5 Online</span>
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h6><i class="fas fa-trophy"></i> Top Players</h6>
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Player 1
+                                <span class="badge bg-primary rounded-pill">1850</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Player 2
+                                <span class="badge bg-primary rounded-pill">1720</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Player 3
+                                <span class="badge bg-primary rounded-pill">1645</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h6><i class="fas fa-question-circle"></i> How to Play</h6>
+                        <p>Join an existing game or create your own. White moves first. Drag and drop pieces to make your move.</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rulesModal">
+                            <i class="fas fa-book"></i> Chess Rules
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-comment-alt"></i> Lobby Chat</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chat-messages p-2 mb-3" style="height: 200px; overflow-y: auto;">
+                        <div class="text-center text-muted py-3">
+                            <p>Chat functionality coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Game Creation Modal -->
+<div class="modal fade" id="createGameModal" tabindex="-1" aria-labelledby="createGameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createGameModalLabel">Create New Game</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createGameForm">
+                    <div class="mb-3">
+                        <label class="form-label">Play as</label>
+                        <div class="btn-group w-100" role="group" aria-label="Select side">
+                            <input type="radio" class="btn-check" name="side" id="sideWhite" value="white" checked>
+                            <label class="btn btn-outline-dark" for="sideWhite">
+                                <i class="fas fa-chess-pawn"></i> White
+                            </label>
+                            <input type="radio" class="btn-check" name="side" id="sideBlack" value="black">
+                            <label class="btn btn-outline-dark" for="sideBlack">
+                                <i class="fas fa-chess-pawn"></i> Black
+                            </label>
+                            <input type="radio" class="btn-check" name="side" id="sideRandom" value="random">
+                            <label class="btn btn-outline-dark" for="sideRandom">
+                                <i class="fas fa-random"></i> Random
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                <div id="createGameStatus"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmCreateGame">
+                    <i class="fas fa-chess"></i> Create Game
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chess Rules Modal -->
+<div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rulesModalLabel">Chess Rules</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Basic Rules</h5>
+                <p>Chess is played on a square board of eight rows and eight columns. The colors of the 64 squares alternate between light and dark, and the board is positioned so that a light square is in each player's bottom-right corner.</p>
+                
+                <h5>Piece Movement</h5>
+                <ul>
+                    <li><strong>King:</strong> The king moves exactly one square horizontally, vertically, or diagonally.</li>
+                    <li><strong>Queen:</strong> The queen moves any number of vacant squares horizontally, vertically, or diagonally.</li>
+                    <li><strong>Rook:</strong> The rook moves any number of vacant squares horizontally or vertically.</li>
+                    <li><strong>Bishop:</strong> The bishop moves any number of vacant squares diagonally.</li>
+                    <li><strong>Knight:</strong> The knight jumps to any of the closest squares that are not on the same rank, file, or diagonal, thus creating an "L" shape.</li>
+                    <li><strong>Pawn:</strong> The pawn moves forward exactly one square, or optionally, two squares from its starting position. The pawn captures an opponent's piece by moving diagonally one square.</li>
+                </ul>
+                
+                <h5>Special Moves</h5>
+                <ul>
+                    <li><strong>Castling:</strong> A special move involving the king and either rook.</li>
+                    <li><strong>En Passant:</strong> A special pawn capture that can occur when a pawn advances two squares.</li>
+                    <li><strong>Promotion:</strong> When a pawn reaches the eighth rank, it is promoted to a queen, rook, bishop, or knight of the same color.</li>
+                </ul>
+                
+                <h5>Game End</h5>
+                <ul>
+                    <li><strong>Checkmate:</strong> When a king is in check and there is no legal move to escape the check.</li>
+                    <li><strong>Stalemate:</strong> When a player has no legal moves and their king is not in check.</li>
+                    <li><strong>Draw:</strong> By agreement, fifty-move rule, threefold repetition, or insufficient material.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Show games list after a short delay
+            setTimeout(function() {
+                $('#loadingGames').addClass('d-none');
+                
+                if ($('.game-row').length > 0) {
+                    $('#gamesList').removeClass('d-none');
+                } else {
+                    $('#noGames').removeClass('d-none');
+                }
+            }, 500);
+            
+            // Create game button
+            $('#createGameBtn').click(function() {
+                $('#createGameModal').modal('show');
+            });
+            
+            // Confirm create game
+            $('#confirmCreateGame').click(function() {
+                var $btn = $(this);
+                var $status = $('#createGameStatus');
+                
+                // Show loading state
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...');
+                $status.html('');
+                
+                // Send AJAX request to create game
+                $.post("/Game/Create", function(data, status) {
+                    if (status === "success") {
+                        // Show success message
+                        $status.html('<div class="alert alert-success">Game created successfully! Redirecting...</div>');
+                        
+                        // Redirect to the game page
+                        setTimeout(function() {
+                            window.location.href = "/Game?gameId=" + data.gameId;
+                        }, 1000);
+                    } else {
+                        // Show error message
+                        $status.html('<div class="alert alert-danger">Error creating game. Please try again.</div>');
+                        $btn.prop('disabled', false).html('<i class="fas fa-chess"></i> Create Game');
+                    }
+                }).fail(function() {
+                    // Show error message on failure
+                    $status.html('<div class="alert alert-danger">Error creating game. Please try again.</div>');
+                    $btn.prop('disabled', false).html('<i class="fas fa-chess"></i> Create Game');
+                });
+            });
+            
+            // Filter games
+            $('[data-filter]').click(function(e) {
+                e.preventDefault();
+                var filter = $(this).data('filter');
+                
+                // Update button text
+                $('#filterDropdown').text($(this).text());
+                
+                // Filter logic would go here
+                // For now, just show a loading spinner and then reveal all games
+                $('#gamesList').addClass('d-none');
+                $('#loadingGames').removeClass('d-none');
+                $('#noGames').addClass('d-none');
+                
+                setTimeout(function() {
+                    $('#loadingGames').addClass('d-none');
+                    $('#gamesList').removeClass('d-none');
+                }, 500);
+            });
+            
+            // Refresh games
+            $('#refreshGames').click(function() {
+                // Show loading spinner
+                $('#gamesList').addClass('d-none');
+                $('#loadingGames').removeClass('d-none');
+                $('#noGames').addClass('d-none');
+                
+                // Reload the page after a short delay
+                setTimeout(function() {
+                    window.location.reload();
+                }, 500);
+            });
+        });
+    </script>
+}
